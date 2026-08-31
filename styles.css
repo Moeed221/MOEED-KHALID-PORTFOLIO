@@ -2092,3 +2092,18 @@
 @media (max-width: 768px) {
     .case-study-panel { min-height: 280px; padding: 30px; }
 }
+/* Keep the latest, image-backed case studies at the top of Featured Work. */
+.projects-showcase .container {
+    display: flex;
+    flex-direction: column;
+}
+
+.projects-showcase .section-header { order: 0; }
+.project-aeonian { order: 1; }
+.project-cuidaapr { order: 2; }
+.project-mnimi { order: 3; }
+.project-iqprompt-mobile { order: 4; }
+.project-balochistan { order: 5; }
+.project-snooker { order: 6; }
+.project-developer-x { order: 7; }
+.project-iqprompt-web { order: 8; }
