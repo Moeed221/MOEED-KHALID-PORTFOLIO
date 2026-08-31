@@ -2101,46 +2101,10 @@
 .projects-showcase .section-header { order: 0; }
 .project-aeonian { order: 1; }
 .project-cuidaapr { order: 2; }
-.project-mnimi { order: 3; }
-.project-iqprompt-mobile { order: 4; }
-.project-balochistan { order: 5; }
-.project-snooker { order: 6; }
-.project-developer-x { order: 7; }
-.project-iqprompt-web { order: 8; }
-
-/* Show MNIMI's web and mobile experiences together without adding extra cards. */
-.dual-device-mockup {
-    min-height: 440px;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.dual-device-mockup .mnimi-laptop {
-    width: 88%;
-}
-
-.dual-device-mockup .mnimi-phone {
-    width: 150px;
-    position: absolute;
-    right: 0;
-    bottom: -28px;
-    z-index: 2;
-}
-
-@media (max-width: 768px) {
-    .dual-device-mockup {
-        min-height: 360px;
-        width: 100%;
-    }
-
-    .dual-device-mockup .mnimi-laptop {
-        width: 92%;
-    }
-
-    .dual-device-mockup .mnimi-phone {
-        width: 120px;
-        right: 2%;
-        bottom: 0;
-    }
-}
+.project-mnimi-web { order: 3; }
+.project-mnimi-mobile { order: 4; }
+.project-iqprompt-mobile { order: 5; }
+.project-balochistan { order: 6; }
+.project-snooker { order: 7; }
+.project-developer-x { order: 8; }
+.project-iqprompt-web { order: 9; }
