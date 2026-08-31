@@ -2035,3 +2035,60 @@
                 transform: none;
             }
         }
+/* Abstract project previews for work that cannot be publicly shown in full. */
+.case-study-panel {
+    min-height: 340px;
+    width: 100%;
+    border-radius: 28px;
+    padding: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.case-study-panel::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    filter: blur(4px);
+    top: -100px;
+    right: -70px;
+}
+
+.case-study-panel span {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: rgba(10, 10, 15, 0.45);
+    font: 700 18px 'Space Grotesk', sans-serif;
+}
+
+.case-study-panel strong {
+    max-width: 360px;
+    font: 700 clamp(28px, 4vw, 44px)/1.08 'Space Grotesk', sans-serif;
+    letter-spacing: -0.04em;
+}
+
+.case-study-panel small {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+}
+
+.case-study-panel.iqprompt { background: linear-gradient(145deg, #5b4be0, #17152c 75%); }
+.case-study-panel.healthcare { background: linear-gradient(145deg, #008f8b, #102626 75%); }
+.case-study-panel.transport { background: linear-gradient(145deg, #d55758, #2b171b 75%); }
+
+@media (max-width: 768px) {
+    .case-study-panel { min-height: 280px; padding: 30px; }
+}
