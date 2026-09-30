@@ -15,12 +15,6 @@ projects.splice(0,2,
  {...iq,slug:'iqprompt-mobile',name:'IQPrompt Mobile',image:iq.phone,phone:null,category:'AI writing assistant · Mobile',scope:'Mobile writing assistant',captions:[iq.captions[1]],summary:'An AI writing assistant that brings tone selection and rewriting into the mobile workflow.',approach:'I designed the mobile experience around writing in the moment. The smart keyboard supports rewriting text in different tones without interrupting the user’s workflow.',decisions:[iq.decisions[2],iq.decisions[3]]},
  {...mn,slug:'mnimi-mobile',name:'MNIMI Mobile',image:mn.phone,phone:null,category:'Healthcare · Mobile care',scope:'Patient, caregiver & family mobile app',captions:[mn.captions[1]],summary:'A mobile care experience connecting patients, caregivers, and family members.',approach:'I designed mobile experiences for Patients, Caregivers, and Family Members, bringing medication schedules, journals, incidents, and daily activities into the care journey.',decisions:[mn.decisions[2],mn.decisions[3]]});
 const imageSizes = {"snooker-dashboard.jpg": [1440, 1788], "balochistan.png": [664, 1322], "aeonian-seat-reservation.png": [243, 593], "mnimi-web-dashboard.jpg": [1600, 1341], "mnimi-mobile.png": [242, 527], "iqprompt-mobile.png": [262, 625], "cuidaapr-mobile.png": [262, 637], "developer-x-blog.jpg": [1594, 4232], "iqprompt-web-clear.jpg": [932, 792]};
-const grid = document.querySelector('#project-grid');
-function projectCard(p,i){
- const mobile=!['iqprompt','mnimi','snooker','developer-x'].includes(p.slug);
- return `<a class="motion-project ${mobile?'is-mobile':'is-web'}" href="/projects/${p.slug}/" aria-label="Explore ${p.name}"><div class="motion-image" style="--project-color:${p.color}"><img src="/assets/${p.image}" alt="${p.name} interface" width="${imageSizes[p.image][0]}" height="${imageSizes[p.image][1]}" loading="lazy" decoding="async"><span class="motion-open" aria-hidden="true">↗</span></div><div class="motion-caption"><span class="motion-number">${String(i+1).padStart(2,'0')}</span><div><h3>${p.name}</h3><p>${p.category}</p></div></div></a>`;
-}
-if(grid) initMotionGallery();
 const slug=location.pathname.split('/').filter(Boolean)[1];
 if(location.pathname.startsWith('/projects/')){
  const p=projects.find(x=>x.slug===slug);
@@ -31,56 +25,7 @@ if(location.pathname.startsWith('/projects/')){
   document.querySelector('#main').innerHTML=`<div class="case-page" style="--case-color:${p.color}"><a class="case-back" href="/#work">Back to projects</a><div class="case-header"><div><p class="eyebrow">${p.label} / SELECTED PROJECT</p><h1>${p.name}</h1></div><p>${p.summary}</p></div><div class="case-cover"><img src="/assets/${p.image}" alt="${p.captions[0]}">${p.phone?`<img class="case-phone" src="/assets/${p.phone}" alt="${p.captions[1]}">`:''}</div><div class="case-facts"><div><span>MY ROLE</span><p>${p.role}</p></div><div><span>PROJECT SCOPE</span><p>${p.scope}</p></div><div><span>FOCUS</span><p>${p.category}</p></div></div><section class="case-story"><h2>The challenge.</h2><p>${p.problem}</p></section><section class="case-story"><h2>The approach.</h2><p>${p.approach}</p></section><section class="case-story"><h2>Design decisions.</h2><ul>${p.decisions.map(x=>`<li>${x}</li>`).join('')}</ul></section><section class="case-details"><h2>A closer look.</h2><div class="case-gallery">${[p.image,p.phone].filter(Boolean).map((x,i)=>`<figure><img src="/assets/${x}" alt="${p.captions[i]}" loading="lazy"><figcaption>${p.captions[i]}</figcaption></figure>`).join('')}</div></section><div class="case-next"><div><p>NEXT PROJECT</p><a href="/projects/${next.slug}/">${next.name}</a></div><a href="mailto:moeedkhalid22@gmail.com" style="font-size:16px">Discuss a project</a></div></div>`;
  }else{document.querySelector('#main').innerHTML='<div class="case-page"><h1>Project not found</h1><a class="button primary" href="/#work">Explore projects</a></div>';}
 }else{
- import('/scene.js?v=20260930f').then(m=>{m.initScene();}).catch(()=>document.querySelector('#hero-art')?.classList.add('failed'));
+ import('/scene.js?v=20260930f').then(m=>m.initScene()).catch(()=>document.querySelector('#hero-art')?.classList.add('failed'));
+ import('/journey.js?v=20261001immersive1').then(m=>m.initJourney(projects)).catch(()=>document.querySelector('#journey')?.classList.add('journey-unavailable'));
 }
 
-if(!location.pathname.startsWith('/projects/')){
- const reveal=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');reveal.unobserve(e.target);}}),{threshold:.1});
- document.querySelectorAll('.project-card,.process-steps article,.about-layout,.experience-list article').forEach(el=>{el.classList.add('reveal');reveal.observe(el)});
-
-}
-
-function initMotionGallery(){
- const reduced=matchMedia('(prefers-reduced-motion: reduce)'), wide=matchMedia('(min-width: 1000px)'), tablet=matchMedia('(min-width: 620px)');
- const section=grid.closest('section'), toggle=document.querySelector('.motion-toggle');
- let columns=[], visible=false, raf=0, count=0, opening=false;
- const paused=()=>reduced.matches||toggle?.getAttribute('aria-pressed')==='true';
- function draw(){
-  raf=0;
-  if(!visible||document.hidden)return;
-  const rect=grid.getBoundingClientRect();
-  const progress=Math.max(-1,Math.min(1,(innerHeight*.5-(rect.top+rect.height*.5))/(innerHeight+rect.height)*2));
-  columns.forEach((column,i)=>{column.style.transform=`translate3d(0,${paused()||count===1?0:progress*[-34,26,-18][i]}px,0)`;});
- }
- function wake(){if(!raf)raf=requestAnimationFrame(draw);}
- function layout(){
-  const next=wide.matches?3:tablet.matches?2:1;
-  if(next!==count){
-   count=next;grid.innerHTML=Array.from({length:count},()=>'<div class="motion-column"></div>').join('');columns=[...grid.children];
-   projects.forEach((p,i)=>columns[i%count].insertAdjacentHTML('beforeend',projectCard(p,i)));
-  }
-  wake();
- }
- new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)wake();else{cancelAnimationFrame(raf);raf=0;}},{rootMargin:'120px'}).observe(section);
- window.addEventListener('scroll',wake,{passive:true});window.addEventListener('resize',layout);
- wide.addEventListener('change',layout);tablet.addEventListener('change',layout);reduced.addEventListener('change',wake);
- if(toggle)new MutationObserver(wake).observe(toggle,{attributes:true,attributeFilter:['aria-pressed']});
- document.addEventListener('visibilitychange',wake);grid.addEventListener('load',wake,true);
- grid.addEventListener('click',async event=>{
-  const link=event.target.closest('.motion-project');
-  if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||paused())return;
-  const source=link.querySelector('.motion-image'), rect=source.getBoundingClientRect();
-  if(!source.animate)return;
-  event.preventDefault();if(opening)return;opening=true;
-  const overlay=document.createElement('div');overlay.className='project-transition'+(link.classList.contains('is-mobile')?' is-mobile':'');overlay.setAttribute('aria-hidden','true');
-  const preview=source.cloneNode(true);preview.classList.add('transition-preview');preview.querySelector('.motion-open')?.remove();
-  Object.assign(preview.style,{position:'fixed',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,margin:'0'});
-  overlay.append(preview);document.body.append(overlay);
-  const mobile=link.classList.contains('is-mobile'), targetWidth=Math.min(innerWidth*(mobile?.55:.82),mobile?330:1080),targetHeight=Math.min(innerHeight*.78,mobile?targetWidth*2.15:targetWidth*.72);
-  overlay.animate([{backgroundColor:'rgba(23,16,33,0)'},{backgroundColor:'rgba(23,16,33,.96)'}],{duration:480,fill:'forwards',easing:'ease-out'});
-  const animation=preview.animate([{left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,borderRadius:'10px'},{left:`${(innerWidth-targetWidth)/2}px`,top:`${(innerHeight-targetHeight)/2}px`,width:`${targetWidth}px`,height:`${targetHeight}px`,borderRadius:'16px'}],{duration:520,fill:'forwards',easing:'cubic-bezier(.22,1,.36,1)'});
-  try{await animation.finished;}catch{}location.assign(link.href);
- });
- window.addEventListener('pageshow',()=>{document.querySelectorAll('.project-transition').forEach(el=>el.remove());opening=false;wake();});
- layout();
-}
