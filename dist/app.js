@@ -14,13 +14,13 @@ projects.splice(0,2,
  {...mn,name:'MNIMI Web',category:'Healthcare · Web dashboards',scope:'Role-based web dashboards',phone:null,summary:'Role-based healthcare dashboards for hospital operations, staff, and schedules.',approach:'I designed dedicated web dashboards for Super Admins, Admins, Hospitals, and Nurses. Each interface focuses on the information and actions relevant to its role.',decisions:[mn.decisions[0],mn.decisions[1],mn.decisions[3]]},
  {...iq,slug:'iqprompt-mobile',name:'IQPrompt Mobile',image:iq.phone,phone:null,category:'AI writing assistant · Mobile',scope:'Mobile writing assistant',captions:[iq.captions[1]],summary:'An AI writing assistant that brings tone selection and rewriting into the mobile workflow.',approach:'I designed the mobile experience around writing in the moment. The smart keyboard supports rewriting text in different tones without interrupting the user’s workflow.',decisions:[iq.decisions[2],iq.decisions[3]]},
  {...mn,slug:'mnimi-mobile',name:'MNIMI Mobile',image:mn.phone,phone:null,category:'Healthcare · Mobile care',scope:'Patient, caregiver & family mobile app',captions:[mn.captions[1]],summary:'A mobile care experience connecting patients, caregivers, and family members.',approach:'I designed mobile experiences for Patients, Caregivers, and Family Members, bringing medication schedules, journals, incidents, and daily activities into the care journey.',decisions:[mn.decisions[2],mn.decisions[3]]});
+const imageSizes = {"snooker-dashboard.jpg": [1440, 1788], "balochistan.png": [664, 1322], "aeonian-seat-reservation.png": [243, 593], "mnimi-web-dashboard.jpg": [1600, 1341], "mnimi-mobile.png": [242, 527], "iqprompt-mobile.png": [262, 625], "cuidaapr-mobile.png": [262, 637], "developer-x-blog.jpg": [1594, 4232], "iqprompt-web-clear.jpg": [932, 792]};
 const grid = document.querySelector('#project-grid');
-function projectCard(p,i){return `<a class="collection-slide ${['iqprompt','mnimi','snooker','developer-x'].includes(p.slug)?'is-web':'is-mobile'}" href="/projects/${p.slug}/" aria-label="Explore ${p.name}"><div class="collection-image" style="background:${p.color}"><span class="collection-stamp">${String(i+1).padStart(2,'0')} / ${p.label}</span><img src="/assets/${p.image}" alt="${p.name} interface" loading="lazy"><span class="collection-open" aria-hidden="true">+</span></div><div class="collection-caption"><div><h3>${p.name}</h3><p>${p.category}</p></div><span>Explore project</span></div></a>`}
-if(grid){
- grid.innerHTML=projects.map(projectCard).join('');
- document.querySelector('#collection-index').innerHTML=projects.map((p,i)=>`<button type="button" class="collection-jump${i===0?' is-active':''}" data-project="${i}"${i===0?' aria-current="true"':''}><span>${String(i+1).padStart(2,'0')}</span><span>${p.name}</span><span class="collection-dot" aria-hidden="true"></span></button>`).join('');
- initCollection();
+function projectCard(p,i){
+ const mobile=!['iqprompt','mnimi','snooker','developer-x'].includes(p.slug);
+ return `<a class="motion-project ${mobile?'is-mobile':'is-web'}" href="/projects/${p.slug}/" aria-label="Explore ${p.name}"><div class="motion-image" style="--project-color:${p.color}"><img src="/assets/${p.image}" alt="${p.name} interface" width="${imageSizes[p.image][0]}" height="${imageSizes[p.image][1]}" loading="lazy" decoding="async"><span class="motion-open" aria-hidden="true">↗</span></div><div class="motion-caption"><span class="motion-number">${String(i+1).padStart(2,'0')}</span><div><h3>${p.name}</h3><p>${p.category}</p></div></div></a>`;
 }
+if(grid) initMotionGallery();
 const slug=location.pathname.split('/').filter(Boolean)[1];
 if(location.pathname.startsWith('/projects/')){
  const p=projects.find(x=>x.slug===slug);
@@ -28,10 +28,10 @@ if(location.pathname.startsWith('/projects/')){
   document.title=`${p.name} — Moeed Naik`;
   document.querySelector('meta[name="description"]').content=p.summary;
   const next=projects[(projects.indexOf(p)+1)%projects.length];
-  document.querySelector('#main').innerHTML=`<div class="case-page" style="--case-color:${p.color}"><a class="case-back" href="/#work">Back to selected work</a><div class="case-header"><div><p class="eyebrow">${p.label} / SELECTED PROJECT</p><h1>${p.name}</h1></div><p>${p.summary}</p></div><div class="case-cover"><img src="/assets/${p.image}" alt="${p.captions[0]}">${p.phone?`<img class="case-phone" src="/assets/${p.phone}" alt="${p.captions[1]}">`:''}</div><div class="case-facts"><div><span>MY ROLE</span><p>${p.role}</p></div><div><span>PROJECT SCOPE</span><p>${p.scope}</p></div><div><span>FOCUS</span><p>${p.category}</p></div></div><section class="case-story"><h2>The challenge.</h2><p>${p.problem}</p></section><section class="case-story"><h2>The approach.</h2><p>${p.approach}</p></section><section class="case-story"><h2>Design decisions.</h2><ul>${p.decisions.map(x=>`<li>${x}</li>`).join('')}</ul></section><section class="case-details"><h2>A closer look.</h2><div class="case-gallery">${[p.image,p.phone].filter(Boolean).map((x,i)=>`<figure><img src="/assets/${x}" alt="${p.captions[i]}" loading="lazy"><figcaption>${p.captions[i]}</figcaption></figure>`).join('')}</div></section><div class="case-next"><div><p>NEXT PROJECT</p><a href="/projects/${next.slug}/">${next.name}</a></div><a href="mailto:moeedkhalid22@gmail.com" style="font-size:16px">Discuss a project</a></div></div>`;
- }else{document.querySelector('#main').innerHTML='<div class="case-page"><h1>Project not found</h1><a class="button primary" href="/#work">Explore selected work</a></div>';}
+  document.querySelector('#main').innerHTML=`<div class="case-page" style="--case-color:${p.color}"><a class="case-back" href="/#work">Back to projects</a><div class="case-header"><div><p class="eyebrow">${p.label} / SELECTED PROJECT</p><h1>${p.name}</h1></div><p>${p.summary}</p></div><div class="case-cover"><img src="/assets/${p.image}" alt="${p.captions[0]}">${p.phone?`<img class="case-phone" src="/assets/${p.phone}" alt="${p.captions[1]}">`:''}</div><div class="case-facts"><div><span>MY ROLE</span><p>${p.role}</p></div><div><span>PROJECT SCOPE</span><p>${p.scope}</p></div><div><span>FOCUS</span><p>${p.category}</p></div></div><section class="case-story"><h2>The challenge.</h2><p>${p.problem}</p></section><section class="case-story"><h2>The approach.</h2><p>${p.approach}</p></section><section class="case-story"><h2>Design decisions.</h2><ul>${p.decisions.map(x=>`<li>${x}</li>`).join('')}</ul></section><section class="case-details"><h2>A closer look.</h2><div class="case-gallery">${[p.image,p.phone].filter(Boolean).map((x,i)=>`<figure><img src="/assets/${x}" alt="${p.captions[i]}" loading="lazy"><figcaption>${p.captions[i]}</figcaption></figure>`).join('')}</div></section><div class="case-next"><div><p>NEXT PROJECT</p><a href="/projects/${next.slug}/">${next.name}</a></div><a href="mailto:moeedkhalid22@gmail.com" style="font-size:16px">Discuss a project</a></div></div>`;
+ }else{document.querySelector('#main').innerHTML='<div class="case-page"><h1>Project not found</h1><a class="button primary" href="/#work">Explore projects</a></div>';}
 }else{
- import('/scene.js?v=20260930f').then(m=>{m.initScene();m.initGallery(projects);}).catch(()=>document.querySelector('#hero-art')?.classList.add('failed'));
+ import('/scene.js?v=20260930f').then(m=>{m.initScene();}).catch(()=>document.querySelector('#hero-art')?.classList.add('failed'));
 }
 
 if(!location.pathname.startsWith('/projects/')){
@@ -40,19 +40,47 @@ if(!location.pathname.startsWith('/projects/')){
 
 }
 
-function initCollection(){
- const scroll=document.querySelector('#collection-scroll'),layout=scroll.querySelector('.collection-layout'),viewport=document.querySelector('#collection-window'),track=document.querySelector('#project-grid');
- const slides=[...track.children],buttons=[...document.querySelectorAll('.collection-jump')],reduced=matchMedia('(prefers-reduced-motion: reduce)'),desktop=matchMedia('(min-width: 901px) and (min-height: 700px)');
- let reel=false,visible=false,raf=0,current=0,target=0,active=-1,start=0,distance=1,frameHeight=1;
- function setActive(index){if(index===active)return;active=index;buttons.forEach((button,i)=>{button.classList.toggle('is-active',i===index);if(i===index)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');});document.querySelector('#collection-count').textContent=`${String(index+1).padStart(2,'0')} / ${String(projects.length).padStart(2,'0')}`;document.querySelector('#collection-progress-fill').style.transform=`scaleX(${(index+1)/projects.length})`;}
- function read(){if(!reel)return;target=Math.max(0,Math.min(projects.length-1,(scrollY-start)/distance*(projects.length-1)));wake();}
- function frame(){raf=0;if(!reel||!visible||document.hidden)return;current+=(target-current)*.14;if(Math.abs(target-current)<.001)current=target;track.style.transform=`translate3d(0,${-current*frameHeight}px,0)`;slides.forEach((slide,i)=>{const d=Math.min(1.4,Math.abs(i-current));slide.querySelector('.collection-image').style.transform=`perspective(1200px) translateY(${(i-current)*12}px) rotateX(${Math.max(-4,Math.min(4,(i-current)*4))}deg) scale(${1-d*.07})`;slide.style.opacity=String(1-Math.min(.3,d*.2));slide.tabIndex=i===Math.round(current)?0:-1;});setActive(Math.round(current));if(Math.abs(target-current)>.001)raf=requestAnimationFrame(frame);}
- function wake(){if(!raf&&visible&&!document.hidden&&reel)raf=requestAnimationFrame(frame);}
- function measure(){reel=desktop.matches&&!reduced.matches;scroll.classList.toggle('is-reel',reel);if(reel){scroll.style.height=`${(projects.length-1)*innerHeight*.48+layout.offsetHeight}px`;frameHeight=track.clientHeight;start=scroll.getBoundingClientRect().top+scrollY-innerHeight*.04;distance=scroll.offsetHeight-layout.offsetHeight;target=Math.max(0,Math.min(projects.length-1,(scrollY-start)/distance*(projects.length-1)));current=target;read();}else{scroll.style.height='';track.style.transform='';slides.forEach(slide=>{slide.style.opacity='';slide.tabIndex=0;slide.querySelector('.collection-image').style.transform='';});}}
- buttons.forEach((button,i)=>button.addEventListener('click',()=>{if(reel){window.scrollTo({top:start+distance*i/(projects.length-1),behavior:'smooth'});}else{slides[i].scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'center'});}setActive(i);}));
- new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)read();else{cancelAnimationFrame(raf);raf=0;}},{rootMargin:'150px'}).observe(scroll);
-
- const mobileObserver=new IntersectionObserver(entries=>{if(reel)return;entries.forEach(entry=>{if(entry.isIntersecting)setActive(slides.indexOf(entry.target));});},{rootMargin:'-25% 0px -40% 0px',threshold:0});slides.forEach(slide=>mobileObserver.observe(slide));
- window.addEventListener('scroll',read,{passive:true});window.addEventListener('resize',measure);desktop.addEventListener('change',measure);reduced.addEventListener('change',measure);document.addEventListener('visibilitychange',()=>{if(!document.hidden)read();});measure();document.fonts.ready.then(measure);
- window.__portfolioCollection={get active(){return active;},get reel(){return reel;},get target(){return target;}};
+function initMotionGallery(){
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)'), wide=matchMedia('(min-width: 1000px)'), tablet=matchMedia('(min-width: 620px)');
+ const section=grid.closest('section'), toggle=document.querySelector('.motion-toggle');
+ let columns=[], visible=false, raf=0, count=0, opening=false;
+ const paused=()=>reduced.matches||toggle?.getAttribute('aria-pressed')==='true';
+ function draw(){
+  raf=0;
+  if(!visible||document.hidden)return;
+  const rect=grid.getBoundingClientRect();
+  const progress=Math.max(-1,Math.min(1,(innerHeight*.5-(rect.top+rect.height*.5))/(innerHeight+rect.height)*2));
+  columns.forEach((column,i)=>{column.style.transform=`translate3d(0,${paused()||count===1?0:progress*[-34,26,-18][i]}px,0)`;});
+ }
+ function wake(){if(!raf)raf=requestAnimationFrame(draw);}
+ function layout(){
+  const next=wide.matches?3:tablet.matches?2:1;
+  if(next!==count){
+   count=next;grid.innerHTML=Array.from({length:count},()=>'<div class="motion-column"></div>').join('');columns=[...grid.children];
+   projects.forEach((p,i)=>columns[i%count].insertAdjacentHTML('beforeend',projectCard(p,i)));
+  }
+  wake();
+ }
+ new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)wake();else{cancelAnimationFrame(raf);raf=0;}},{rootMargin:'120px'}).observe(section);
+ window.addEventListener('scroll',wake,{passive:true});window.addEventListener('resize',layout);
+ wide.addEventListener('change',layout);tablet.addEventListener('change',layout);reduced.addEventListener('change',wake);
+ if(toggle)new MutationObserver(wake).observe(toggle,{attributes:true,attributeFilter:['aria-pressed']});
+ document.addEventListener('visibilitychange',wake);grid.addEventListener('load',wake,true);
+ grid.addEventListener('click',async event=>{
+  const link=event.target.closest('.motion-project');
+  if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||paused())return;
+  const source=link.querySelector('.motion-image'), rect=source.getBoundingClientRect();
+  if(!source.animate)return;
+  event.preventDefault();if(opening)return;opening=true;
+  const overlay=document.createElement('div');overlay.className='project-transition'+(link.classList.contains('is-mobile')?' is-mobile':'');overlay.setAttribute('aria-hidden','true');
+  const preview=source.cloneNode(true);preview.classList.add('transition-preview');preview.querySelector('.motion-open')?.remove();
+  Object.assign(preview.style,{position:'fixed',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,margin:'0'});
+  overlay.append(preview);document.body.append(overlay);
+  const mobile=link.classList.contains('is-mobile'), targetWidth=Math.min(innerWidth*(mobile?.55:.82),mobile?330:1080),targetHeight=Math.min(innerHeight*.78,mobile?targetWidth*2.15:targetWidth*.72);
+  overlay.animate([{backgroundColor:'rgba(23,16,33,0)'},{backgroundColor:'rgba(23,16,33,.96)'}],{duration:480,fill:'forwards',easing:'ease-out'});
+  const animation=preview.animate([{left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,borderRadius:'10px'},{left:`${(innerWidth-targetWidth)/2}px`,top:`${(innerHeight-targetHeight)/2}px`,width:`${targetWidth}px`,height:`${targetHeight}px`,borderRadius:'16px'}],{duration:520,fill:'forwards',easing:'cubic-bezier(.22,1,.36,1)'});
+  try{await animation.finished;}catch{}location.assign(link.href);
+ });
+ window.addEventListener('pageshow',()=>{document.querySelectorAll('.project-transition').forEach(el=>el.remove());opening=false;wake();});
+ layout();
 }
